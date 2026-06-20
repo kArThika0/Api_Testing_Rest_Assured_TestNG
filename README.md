@@ -404,7 +404,6 @@ generateAppointmentConfirmation(...)                 // Business confirmation lo
 
 ---
 
-## 🎯 Interview Highlights
 
 ### Testing Knowledge Demonstrated
 1. **API Testing Fundamentals**
@@ -452,7 +451,7 @@ generateAppointmentConfirmation(...)                 // Business confirmation lo
    - Logical package organization
    - Clear, readable test code
 
-### Why This Project is Interview-Ready
+### Why This Project 
 
 ✅ **Real-world Scenarios** - Food delivery, healthcare appointments, user management (relatable domains)
 
