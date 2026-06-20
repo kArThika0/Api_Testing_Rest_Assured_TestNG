@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Food Delivery API Test Suite" parallel="false" thread-count="1">
+    <test name="Food Delivery - Positive Tests" enabled="true">
+        <groups>
+            <run>
+                <include name="positive"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="FoodDeliveryTest"/>
+        </classes>
+    </test>
+
+    <test name="Food Delivery - Negative Tests" enabled="true">
+        <groups>
+            <run>
+                <include name="negative"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="FoodDeliveryTest"/>
+        </classes>
+    </test>
+
+    <test name="Food Delivery - All Tests" enabled="true">
+        <classes>
+            <class name="FoodDeliveryTest"/>
+        </classes>
+    </test>
+</suite>
+

@@ -1,0 +1,256 @@
+1. Flight Booking System
+
+A user searches for flights, books a seat, and receives a booking confirmation with PNR. Validate seat availability, passenger data, payment, and inventory update.
+
+Sample request / response JSON
+
+POST /api/v1/bookings
+{
+  "flightId": "AI-202",
+  "passenger": {
+    "name": "Priya Sharma",
+    "dob": "1992-04-15",
+    "passportNo": "N1234567",
+    "email": "priya@example.com"
+  },
+  "seatClass": "economy",
+  "seats": 2,
+  "payment": {
+    "method": "card",
+    "amount": 8500.00,
+    "currency": "INR"
+  }
+}
+{
+  "status": "CONFIRMED",
+  "pnr": "PNR7X29K",
+  "flightId": "AI-202",
+  "totalAmount": 8500.00,
+  "seats": ["14A","14B"],
+  "boardingTime": "2026-07-01T06:30:00Z",
+  "errors": []
+}
+5 helper functions to implement
+
+checkFlightExists(flightId)
+checkSeatAvailability(flightId, seatClass, qty)
+validatePassengerDetails(passenger)
+processPayment(payment)
+generatePNR(flightId, passenger)
+Test scenarios to cover
+
+Happy path — 2 economy seats
+Sold-out flight → FAILED
+Invalid passport format → 400
+Payment failure → PAYMENT_FAILED
+Duplicate booking same PNR
+
+
+
+
+2.2. Hospital Appointment Booking
+
+  Patient books a doctor appointment. Validate doctor availability, patient registration, slot conflict, and appointment confirmation.
+
+  Sample request / response JSON
+
+  POST /api/v1/appointments
+  {
+    "doctorId": "DOC-1042",
+    "patientId": "PAT-8821",
+    "specialty": "cardiology",
+    "appointmentDate": "2026-07-10",
+    "timeSlot": "10:30",
+    "appointmentType": "consultation",
+    "symptoms": ["chest pain","fatigue"],
+    "insuranceId": "ICICI-HLT-90213"
+  }
+  {
+    "appointmentId": "APT-20260710-003",
+    "status": "BOOKED",
+    "doctorName": "Dr. Ramesh Iyer",
+    "hospital": "Apollo Chennai",
+    "scheduledAt": "2026-07-10T10:30:00+05:30",
+    "tokenNumber": 3,
+    "instructions": "Arrive 15 mins early. Bring previous reports.",
+    "errors": []
+  }
+  5 helper functions to implement
+
+  checkDoctorAvailability(doctorId, date, slot)
+  validatePatientRecord(patientId)
+  checkSlotConflict(doctorId, date, timeSlot)
+  verifyInsurance(insuranceId, specialty)
+  generateAppointmentConfirmation(doctorId, patientId)
+  Test scenarios to cover
+
+  Successful booking
+  Doctor unavailable on selected date
+  Slot already taken → SLOT_CONFLICT
+  Insurance not covering specialty → 422
+  Patient not registered → 404
+
+  3. E-commerce Order & Inventory
+
+  Customer places a multi-item order with discount coupon. System validates stock, applies coupon, calculates GST, deducts inventory, and returns invoice.
+
+  Sample request / response JSON
+
+  POST /api/v2/orders
+  {
+    "customerId": "CUST-44129",
+    "items": [
+      { "sku": "LPT-DELL-XPS15", "qty": 1, "unitPrice": 95000.00 },
+      { "sku": "ACC-MOUSE-LOGI", "qty": 2, "unitPrice": 1500.00 }
+    ],
+    "couponCode": "SAVE10",
+    "shippingAddress": {
+      "line1": "42 MG Road",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "pincode": "560001"
+    },
+    "paymentMethod": "upi",
+    "upiId": "priya@okicici"
+  }
+  {
+    "orderId": "ORD-2026-88821",
+    "status": "PLACED",
+    "items": [
+      { "sku": "LPT-DELL-XPS15", "qty": 1, "lineTotal": 95000.00 },
+      { "sku": "ACC-MOUSE-LOGI", "qty": 2, "lineTotal": 3000.00 }
+    ],
+    "subtotal": 98000.00,
+    "discount": 9800.00,
+    "gst": 15876.00,
+    "grandTotal": 104076.00,
+    "estimatedDelivery": "2026-06-14",
+    "invoiceUrl": "/invoices/ORD-2026-88821.pdf",
+    "errors": []
+  }
+  5 helper functions to implement
+
+  validateSkuAndStock(sku, qty)
+  applyCoupon(couponCode, subtotal)
+  calculateGST(items, state)
+  processUPIPayment(upiId, amount)
+  updateInventoryAndGenerateInvoice(orderId, items)
+  Test scenarios to cover
+
+  Full order success with coupon
+  One SKU out of stock → partial
+  Expired coupon → COUPON_INVALID
+  UPI failure → PAYMENT_FAILED
+  Invalid pincode → 400
+  GST calculation for inter-state order
+
+
+  4. Banking Fund Transfer
+
+  User initiates an IMPS/NEFT transfer. Validate sender balance, beneficiary account, transfer limits, and generate transaction reference.
+
+  Sample request / response JSON
+
+  POST /api/v1/transfers
+  {
+    "transferType": "IMPS",
+    "sender": {
+      "accountNo": "9988001122",
+      "ifsc": "HDFC0001234",
+      "mpin": "****"
+    },
+    "beneficiary": {
+      "accountNo": "1122334455",
+      "ifsc": "SBIN0004567",
+      "name": "Arun Kumar"
+    },
+    "amount": 25000.00,
+    "currency": "INR",
+    "remarks": "Rent July 2026",
+    "notifyBeneficiary": true
+  }
+  {
+    "transactionId": "TXN20260609HDFC882211",
+    "status": "SUCCESS",
+    "transferType": "IMPS",
+    "amount": 25000.00,
+    "charges": 5.00,
+    "netDeducted": 25005.00,
+    "timestamp": "2026-06-09T14:22:33+05:30",
+    "rrn": "620914528831",
+    "senderBalance": 74995.00,
+    "errors": []
+  }
+  5 helper functions to implement
+
+  validateSenderAccount(accountNo, ifsc, mpin)
+  checkSufficientBalance(accountNo, amount)
+  validateBeneficiary(accountNo, ifsc, name)
+  checkTransferLimits(transferType, amount)
+  executeTransferAndNotify(sender, beneficiary, amount)
+  Test scenarios to cover
+
+  Successful IMPS transfer
+  Insufficient balance → INSUFFICIENT_FUNDS
+  Invalid beneficiary IFSC → 422
+  Daily limit exceeded → LIMIT_EXCEEDED
+  Wrong MPIN → AUTH_FAILED
+  Bank server down → 503
+
+  5. Food Delivery Order
+
+  User orders food from a restaurant. Validate restaurant availability, item existence, delivery radius, and assign a delivery partner.
+
+  Sample request / response JSON
+
+  POST /api/v1/food-orders
+  {
+    "restaurantId": "REST-ZOM-9981",
+    "customerId": "USR-44512",
+    "items": [
+      { "itemId": "ITEM-001", "name": "Paneer Butter Masala", "qty": 2, "price": 280 },
+      { "itemId": "ITEM-034", "name": "Garlic Naan", "qty": 4, "price": 60 }
+    ],
+    "deliveryAddress": {
+      "lat": 12.9716,
+      "lng": 77.5946,
+      "label": "Home",
+      "fullAddress": "12 Indiranagar, Bangalore"
+    },
+    "promoCode": "FLAT50",
+    "paymentMode": "wallet"
+  }
+
+  {
+    "orderId": "FDO-20260609-77123",
+    "status": "ACCEPTED",
+    "restaurant": "Punjabi Tadka",
+    "estimatedDelivery": "35 mins",
+    "deliveryPartner": {
+      "name": "Suresh M",
+      "phone": "+91-9900XXXXXX",
+      "rating": 4.8
+    },
+    "bill": {
+      "subtotal": 800,
+      "promoDiscount": 50,
+      "deliveryFee": 30,
+      "taxes": 42,
+      "total": 822
+    },
+    "errors": []
+  }
+  5 helper functions to implement
+
+  checkRestaurantOpen(restaurantId)
+  validateMenuItems(restaurantId, items)
+  checkDeliveryRadius(restaurantId, deliveryLat, deliveryLng)
+  applyPromoCode(promoCode, subtotal)
+  assignDeliveryPartner(restaurantId, deliveryAddress)
+  Test scenarios to cover
+
+  Successful order
+  Restaurant closed → RESTAURANT_CLOSED
+  Item unavailable today → ITEM_UNAVAILABLE
+  Address out of delivery range → OUT_OF_RANGE
+  Wallet insufficient balance → 402

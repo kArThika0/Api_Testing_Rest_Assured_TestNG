@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "orderId": {
+      "type": "string",
+      "pattern": "^FDO-\\d{8}-\\d{5}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACCEPTED", "REJECTED", "PENDING", "CANCELLED"]
+    },
+    "restaurant": {
+      "type": "string"
+    },
+    "estimatedDelivery": {
+      "type": "string",
+      "pattern": "^\\d+ mins$"
+    },
+    "deliveryPartner": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "^\\+91-\\d{10}$"
+        },
+        "rating": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        }
+      },
+      "required": ["name", "phone", "rating"]
+    },
+    "bill": {
+      "type": "object",
+      "properties": {
+        "subtotal": {
+          "type": "number",
+          "minimum": 0
+        },
+        "promoDiscount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "deliveryFee": {
+          "type": "number",
+          "minimum": 0
+        },
+        "taxes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["subtotal", "promoDiscount", "deliveryFee", "taxes", "total"]
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["orderId", "status", "restaurant", "estimatedDelivery", "deliveryPartner", "bill", "errors"]
+}
+
